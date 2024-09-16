@@ -11,5 +11,7 @@ namespace Yaguar.DB
         void LoadUserData(string uid, Action<string, string, string> callback);
 
         void CheckUserExist(string uid, Action<bool> callback);
+
+        IFirebaseDBManager GetInstance();
     } 
 }

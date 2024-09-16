@@ -57,7 +57,8 @@ namespace Yaguar.Auth
             {
                 var dependencyStatus = task.Result;
                 if (dependencyStatus == Firebase.DependencyStatus.Available)
-                {                    
+                {
+                    Debug.Log("#Firebase Ready");
                     _auth = FirebaseAuth.GetAuth(Firebase.FirebaseApp.DefaultInstance);
                     _auth.StateChanged += AuthStateChanged;
                     //AuthStateChanged(this, null);
@@ -137,12 +138,14 @@ namespace Yaguar.Auth
 
                 IFirebaseDBManager dBManager = firebaseDBManager.GetComponent<IFirebaseDBManager>();
 
-                dBManager.CheckUserExist(result.User.UserId, (exist) =>
+                Debug.Log(dBManager);
+
+                dBManager.GetInstance().LoadUserData(result.User.UserId, (username, email, uid) =>
                 {
-                    Debug.Log("#CheckUserExist callback: "+exist);
-                    if (exist)
+                    Debug.Log("#CheckUserExist callback uid: " + uid);
+                    if (uid != "")
                     {
-                        dBManager.LoadUserData(result.User.UserId, OnFirebaseAuthenticated);
+                        OnFirebaseAuthenticated.Invoke(username,email,uid);
                     }
                     else
                     {
@@ -152,12 +155,34 @@ namespace Yaguar.Auth
                         udata.username = result.User.DisplayName;
                         udata.uid = result.User.UserId;
                         udata.deviceID = SystemInfo.deviceUniqueIdentifier;
-                        dBManager.SaveUserToServer(udata);
+                        dBManager.GetInstance().SaveUserToServer(udata);
                         //GetServerTime();
                         OnSignUp?.Invoke(true);
                         callback(true);
                     }
                 });
+
+                /*dBManager.GetInstance().CheckUserExist(result.User.UserId, (exist) =>
+                {
+                    Debug.Log("#CheckUserExist callback: "+exist);
+                    if (exist)
+                    {
+                        dBManager.GetInstance().LoadUserData(result.User.UserId, OnFirebaseAuthenticated);
+                    }
+                    else
+                    {
+                        OnFirebaseAuthenticated?.Invoke(result.User.DisplayName, "", result.User.UserId);
+                        print("Signed Up localId GooglePlay: " + result.User.UserId);
+                        UserDataInDatabase udata = new UserDataInDatabase();
+                        udata.username = result.User.DisplayName;
+                        udata.uid = result.User.UserId;
+                        udata.deviceID = SystemInfo.deviceUniqueIdentifier;
+                        dBManager.GetInstance().SaveUserToServer(udata);
+                        //GetServerTime();
+                        OnSignUp?.Invoke(true);
+                        callback(true);
+                    }
+                });*/
 
 
                 /*firebaseDBManager.GetComponent<IFirebaseDBManager>().LoadUserData(result.User.UserId, (username, email, uid)=> {
