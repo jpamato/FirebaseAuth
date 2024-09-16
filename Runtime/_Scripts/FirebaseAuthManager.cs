@@ -21,8 +21,6 @@ namespace Yaguar.Auth
             public string username;
             public string email;
             public string uid;
-            public string deviceID;
-            public int score;
         }
 
         int verifyTokenCount;
@@ -154,7 +152,6 @@ namespace Yaguar.Auth
                         UserDataInDatabase udata = new UserDataInDatabase();
                         udata.username = result.User.DisplayName;
                         udata.uid = result.User.UserId;
-                        udata.deviceID = SystemInfo.deviceUniqueIdentifier;
                         dBManager.GetInstance().SaveUserToServer(udata);
                         //GetServerTime();
                         OnSignUp?.Invoke(true);
@@ -232,7 +229,6 @@ namespace Yaguar.Auth
                 udata.username = username;
                 udata.email = email;
                 udata.uid = result.User.UserId;
-                udata.deviceID = SystemInfo.deviceUniqueIdentifier;
                 firebaseDBManager.GetComponent<IFirebaseDBManager>().SaveUserToServer(udata);
                 //GetServerTime();
                 OnSignUp?.Invoke(true);
