@@ -68,7 +68,7 @@ namespace Yaguar.DB
             }, taskScheduler);
         }
 
-        public void SaveUserToServer(FirebaseAuthManager.UserDataInDatabase userData)
+        public virtual void SaveUserToServer(FirebaseAuthManager.UserDataInDatabase userData)
         {
             Debug.Log("#SaveUserToServer_");
             string s = JsonUtility.ToJson(userData);
@@ -86,7 +86,7 @@ namespace Yaguar.DB
             //print("OnSaveUserDate url : " + url);
         }
 
-        public void LoadUserData(string uid, Action<string, string, string> callback)
+        public virtual void LoadUserData(string uid, Action<string, string, string> callback)
         {
             var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
             Debug.Log("#LoadUserData");
