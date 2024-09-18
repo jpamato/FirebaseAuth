@@ -98,7 +98,8 @@ namespace Yaguar.Auth
 
         private void OnDestroy()
         {
-            _auth.StateChanged -= AuthStateChanged;
+            if(_auth!=null)
+                _auth.StateChanged -= AuthStateChanged;
             _auth = null;
 
             OnFirebaseAuthenticated = null;
