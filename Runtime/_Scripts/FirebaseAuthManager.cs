@@ -209,9 +209,10 @@ namespace Yaguar.Auth
             }, taskScheduler);
         }
 
-        public async void SignUpUserEmail(string username, string email, string password)
+        public void SignUpUserEmail(string username, string email, string password)
         {
-            var result = await _auth.CreateUserWithEmailAndPasswordAsync(email, password);/*.ContinueWith(task => {
+            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
                 if (task.IsCanceled || task.IsFaulted)
                 {
                     Debug.Log("ERROR: " + task.Exception);
@@ -220,7 +221,7 @@ namespace Yaguar.Auth
                 }               
 
                 // Firebase user has been created.
-                Firebase.Auth.AuthResult result = task.Result;*/
+                Firebase.Auth.AuthResult result = task.Result;
                 Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                     result.User.DisplayName, result.User.UserId);
 
@@ -233,33 +234,34 @@ namespace Yaguar.Auth
                 firebaseDBManager.GetComponent<IFirebaseDBManager>().SaveUserToServer(udata);
                 //GetServerTime();
                 OnSignUp?.Invoke(true);
-            //});            
+            }, taskScheduler);            
             Debug.Log("Server: SignUpUserEmail");
         }
-        public async void LoginUserByEmail(string email, string password)
+        public void LoginUserByEmail(string email, string password)
         {
-                var task = await _auth.SignInWithEmailAndPasswordAsync(email, password);
-                ///*.ContinueWith(task => {
-                /*if (task. || task.IsFaulted)
+                var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+               _auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+                if (task.IsCanceled || task.IsFaulted)
                 {
                     Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
                     OnLogin?.Invoke(false);
                     return;
                 }
 
-                Firebase.Auth.AuthResult result = task.Result;*/
+                Firebase.Auth.AuthResult result = task.Result;
                 Debug.LogFormat("User signed in successfully: {0} ({1})",
-                    task.User.DisplayName, task.User.UserId);
+                    result.User.DisplayName, result.User.UserId);
 
-                firebaseDBManager.GetComponent<IFirebaseDBManager>().LoadUserData(task.User.UserId, OnFirebaseAuthenticated);
+                firebaseDBManager.GetComponent<IFirebaseDBManager>().LoadUserData(result.User.UserId, OnFirebaseAuthenticated);
                 OnLogin?.Invoke(true);
-            //});*/
+            }, taskScheduler);
             Debug.Log("Server: LoginUserByEmail");
         }
 
-        public async void PasswordReset(string email)
+        public void PasswordReset(string email)
         {
-            await _auth.SendPasswordResetEmailAsync(email).ContinueWith(task => {
+            var taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            _auth.SendPasswordResetEmailAsync(email).ContinueWith(task => {
                 if (task.IsCanceled || task.IsFaulted)
                 {
                     Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
@@ -269,7 +271,7 @@ namespace Yaguar.Auth
 
                 Debug.Log("Email reseted: " + email);
                 OnResetPassword?.Invoke(true);
-            });
+            }, taskScheduler);
             Debug.Log("Server: PasswordReset");
         }                
     }
