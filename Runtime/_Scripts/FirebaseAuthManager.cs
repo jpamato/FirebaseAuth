@@ -158,8 +158,8 @@ namespace Yaguar.Auth
                         udata.uid = result.User.UserId;
                         dBManager.GetInstance().SaveUserToServer(udata);
                         //GetServerTime();
-                        OnSignUp?.Invoke(true);
-                        callback(true);
+			callback(true);
+                        OnSignUp?.Invoke(true);                        
                     }
                 });
 
