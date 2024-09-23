@@ -142,12 +142,15 @@ namespace Yaguar.Auth
                 dBManager.GetInstance().LoadUserData(result.User.UserId, (username, email, uid) =>
                 {
                     Debug.Log("#CheckUserExist callback uid: " + uid);
-                    if (uid != "")
+                    if (uid != ""||uid.Length<2)
                     {
+			Debug.Log("# uid!=void");
                         OnFirebaseAuthenticated.Invoke(username,email,uid);
+			callback(true);
                     }
                     else
                     {
+			Debug.Log("# uid==void");
                         OnFirebaseAuthenticated?.Invoke(result.User.DisplayName, "", result.User.UserId);
                         print("Signed Up localId GooglePlay: " + result.User.UserId);
                         UserDataInDatabase udata = new UserDataInDatabase();

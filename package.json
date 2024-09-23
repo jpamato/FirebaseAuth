@@ -1,6 +1,6 @@
 {
   "name": "com.yaguar.firebase.auth",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "displayName": "Firebase Auth Manager",
   "description": "Library for authenticate with firebase",
   "unity": "2022.3",
