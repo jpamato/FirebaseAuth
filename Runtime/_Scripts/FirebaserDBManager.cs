@@ -38,7 +38,7 @@ namespace Yaguar.DB
 
         void OnFirebaseAuthenticated(string username, string email, string uid)
         {
-            Debug.Log("#OnFirebaseAuthenticated "+gameObject.name+" "+ transform.parent.gameObject.name+" "+this);
+            Debug.Log("#OnFirebaseAuthenticated");
             _uid = uid;
         }
 
